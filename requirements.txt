@@ -1,4 +1,4 @@
-gradio>=4.16
-transformers>=4.35
+gradio
+transformers
 torch
 sentencepiece
