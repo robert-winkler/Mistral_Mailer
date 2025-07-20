@@ -1,4 +1,3 @@
-gradio
-transformers
-torch
-sentencepiece
+streamlit
+python-dotenv
+requests
