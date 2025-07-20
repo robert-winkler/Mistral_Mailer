@@ -83,42 +83,36 @@ st.markdown(
     "*Powered by [Mistral Medium](https://mistral.ai)*"
 )
 
-email_type = st.radio(
-    "Email Type",
-    ["New", "Reply", "Forward"],
-    index=0,
-)
+# Organize radio buttons in a single row
+col1, col2, col3 = st.columns(3)
+with col1:
+    email_type = st.radio("Email Type", ["New", "Reply", "Forward"], index=0)
+with col2:
+    language = st.radio("Language", ["English", "Spanish", "German"], index=0)
+with col3:
+    tone = st.radio("Tone", ["Casual", "Friendly", "Professional"], index=1)
 
-language = st.radio(
-    "Language",
-    ["English", "Spanish", "German"],
-    index=0,
-)
-
-tone = st.radio(
-    "Tone",
-    ["Casual", "Friendly", "Professional"],
-    index=1,
-)
-
-outline_input = st.text_area(
-    "Message Outline",
-    placeholder=(
-        "To: [Recipient]\n"
-        "From: [Your Name]\n\n"
-        "Key Points:\n"
-        "- Know: [Essential information]\n"
-        "- Feel: [Desired emotion]\n"
-        "- Do: [Requested action]"
-    ),
-    height=150,
-)
-
-context_input = st.text_area(
-    "Context (Previous communication)",
-    placeholder="Paste relevant context here...",
-    height=100,
-)
+# Use more of the available screen space
+col4, col5 = st.columns(2)
+with col4:
+    outline_input = st.text_area(
+        "Message Outline",
+        placeholder=(
+            "To: [Recipient]\n"
+            "From: [Your Name]\n\n"
+            "Key Points:\n"
+            "- Know: [Essential information]\n"
+            "- Feel: [Desired emotion]\n"
+            "- Do: [Requested action]"
+        ),
+        height=200,
+    )
+with col5:
+    context_input = st.text_area(
+        "Context (Previous communication)",
+        placeholder="Paste relevant context here...",
+        height=200,
+    )
 
 if st.button("Generate Email"):
     output_text = generate_email(outline_input, context_input, email_type, language, tone)
