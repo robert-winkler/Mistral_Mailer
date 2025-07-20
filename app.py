@@ -46,7 +46,10 @@ def generate_email(outline, context, email_type, language, tone):
         "Forward": f"Forward this with comment: {context}\n\nComment: {outline}",
     }
 
-    prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n<|im_start|>user\n{task_map[email_type]}<|im_end|>\n<|im_start|>assistant\n"
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": task_map[email_type]}
+    ]
 
     headers = {
         "Authorization": f"Bearer {MISTRAL_API_KEY}",
@@ -55,20 +58,20 @@ def generate_email(outline, context, email_type, language, tone):
 
     payload = {
         "model": MODEL_NAME,
-        "prompt": prompt,
+        "messages": messages,
         "max_tokens": MAX_NEW_TOKENS,
         "temperature": TEMPERATURE,
         "top_p": 0.95,
-        "do_sample": True,
-        "eos_token_id": None,
-        "pad_token_id": None,
     }
 
     try:
         response = requests.post(MISTRAL_API_ENDPOINT, headers=headers, json=payload)
         response.raise_for_status()
-        output = response.json()["choices"][0]["text"]
+        output = response.json()["choices"][0]["message"]["content"]
         return output.strip()
+    except requests.exceptions.HTTPError as http_err:
+        st.error(f"HTTP error occurred: {http_err}")
+        st.error(f"Response content: {response.content}")
     except Exception as e:
         st.error(f"Model inference error: {e}")
         return f"Error generating email. ({str(e)})"
