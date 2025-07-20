@@ -76,6 +76,9 @@ def generate_email(outline, context, email_type, language, tone):
         st.error(f"Model inference error: {e}")
         return f"Error generating email. ({str(e)})"
 
+# Set the page config to wide mode
+st.set_page_config(layout="wide")
+
 # Streamlit app
 st.title("Magic Mail Writer (Mistral Medium)")
 
@@ -97,13 +100,13 @@ col4, col5 = st.columns(2)
 with col4:
     outline_input = st.text_area(
         "Message Outline",
-        placeholder=(
-            "To: [Recipient]\n"
-            "From: [Your Name]\n\n"
+        value=(
+            "To [Recipient]: \n"
+            "From [Your Name]: \n\n"
             "Key Points:\n"
-            "- Know: [Essential information]\n"
-            "- Feel: [Desired emotion]\n"
-            "- Do: [Requested action]"
+            "- Know [Essential information]: \n"
+            "- Feel [Desired emotion]: \n"
+            "- Do [Requested action]: "
         ),
         height=200,
     )
