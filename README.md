@@ -1,8 +1,16 @@
----
-title: Magic_Mailer
-app_file: magic-mailer.py
-sdk: gradio
-sdk_version: 4.24.0
----
 # Magic_Mailer
 
+Generates and translates emails in different languages
+
+## Installation
+~~~
+pip install -t requirements.txt
+~~~
+
+## Start web app
+~~~
+streamlit run app.py
+~~~
+
+## License
+MIT, <robertwinkler@posteo.net>
