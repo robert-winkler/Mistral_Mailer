@@ -76,6 +76,56 @@ def generate_email(outline, context, email_type, language, tone):
         st.error(f"Model inference error: {e}")
         return f"Error generating email. ({str(e)})"
 
+# Define the function to generate subject line
+def generate_subject(outline, email_type, language, tone):
+    tone_instructions = {
+        "Casual": "Casual language with contractions. Short sentences.",
+        "Friendly": "Warm tone, positive phrasing. Personal touches.",
+        "Professional": "Formal but not stiff. Complete sentences."
+    }
+
+    system_prompt = (
+        f"Write a concise and descriptive subject line for an email in {language} with the following tone: {tone_instructions[tone]}. "
+        f"Email type: {email_type}. "
+        "Respond ONLY with the subject line text."
+    )
+
+    task_map = {
+        "New": f"Compose new email: {outline}",
+        "Reply": f"Reply to this: {outline}",
+        "Forward": f"Forward this with comment: {outline}",
+    }
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": task_map[email_type]}
+    ]
+
+    headers = {
+        "Authorization": f"Bearer {MISTRAL_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": MODEL_NAME,
+        "messages": messages,
+        "max_tokens": MAX_NEW_TOKENS,
+        "temperature": TEMPERATURE,
+        "top_p": 0.95,
+    }
+
+    try:
+        response = requests.post(MISTRAL_API_ENDPOINT, headers=headers, json=payload)
+        response.raise_for_status()
+        output = response.json()["choices"][0]["message"]["content"]
+        return output.strip()
+    except requests.exceptions.HTTPError as http_err:
+        st.error(f"HTTP error occurred: {http_err}")
+        st.error(f"Response content: {response.content}")
+    except Exception as e:
+        st.error(f"Model inference error: {e}")
+        return f"Error generating subject. ({str(e)})"
+
 # Set the page config to wide mode
 st.set_page_config(layout="wide")
 
@@ -118,5 +168,6 @@ with col5:
     )
 
 if st.button("Generate Email"):
+    subject_text = generate_subject(outline_input, email_type, language, tone)
     output_text = generate_email(outline_input, context_input, email_type, language, tone)
-    st.text_area("Generated Email", value=output_text, height=300)
+    st.text_area("Generated Email", value=f"Subject: {subject_text}\n\n{output_text}", height=300)
