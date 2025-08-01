@@ -1,6 +1,10 @@
-# Magic_Mailer
+# Mistral Mailer
 
-Generates and translates emails in different languages
+Generates and translates emails in different languages.
+
+## Screenshot
+
+![](mistral-mailer-screenshot.png)
 
 ## Installation
 ~~~
