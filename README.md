@@ -8,7 +8,7 @@ Generates and translates emails in different languages.
 
 ## Installation
 ~~~
-pip install -t requirements.txt
+pip install -r requirements.txt
 ~~~
 For using the Mistral API, you need an API key. from <https://console.mistral.ai/api-keys>.  
 The key has to be stored in a file called `.env`:  
